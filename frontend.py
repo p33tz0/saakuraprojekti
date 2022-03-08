@@ -2,6 +2,7 @@ import psycopg2
 import datetime
 from config import config
 import requests
+from weather import req
 
 #This asks for some parameters from user which is used for database.
 name = str(input("Anna nimesi: "))
@@ -27,7 +28,6 @@ while True:
             print("Lopetusika on aikaisempi kuin aloitusaika")
             continue
         break
-    
     except:
         print("Anna oikeassa formaatissa / ")
 
@@ -43,7 +43,6 @@ while True:
 
 
 #This takes the ending time in HHMM format, eg. 0820
-
 while True:
     try: 
         a = datetime.datetime.strptime(input('Anna lopetusaika HHMM formaatissa: '), "%H%M")
@@ -52,11 +51,12 @@ while True:
     except:
         print("Anna oikea aika HHMM formaatissa")
 
+#
 project = str(input("Anna projektin nimI: ")
 desc = str(input("Anna projektin selitys: "))
 
 #Here we get the weather description and temperature from openweathermap
-req = requests.get("http://api.openweathermap.org/data/2.5/weather?lat=60.1695&lon=24.9355&appid=6efc1791652387ffbf2eaf2934333384&lang=fi&units=metric")
+
 weather = req.json()
 for i in weather["weather"]:
     weatherdesc = (i['description'])

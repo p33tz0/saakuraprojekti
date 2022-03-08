@@ -2,6 +2,7 @@ database.ini
 .venv/
 .idea/
 *.pyc
+weather.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
