@@ -25,7 +25,7 @@ while True:
         end = datetime.datetime.strptime(input("Anna lopetuspäivä YYYY-MM-DD formaatissa: "), '%Y-%m-%d')
         enddate = end.strftime('%Y-%m-%d')
         if enddate < startdate:
-            print("Lopetusika on aikaisempi kuin aloitusaika")
+            print("Lopetusaika on aikaisempi kuin aloitusaika")
             continue
         break
     except:
@@ -52,7 +52,7 @@ while True:
         print("Anna oikea aika HHMM formaatissa")
 
 #
-project = str(input("Anna projektin nimI: ")
+project = str(input("Anna projektin nimI: "))
 desc = str(input("Anna projektin selitys: "))
 
 #Here we get the weather description and temperature from openweathermap
@@ -60,7 +60,7 @@ desc = str(input("Anna projektin selitys: "))
 weather = req.json()
 for i in weather["weather"]:
     weatherdesc = (i['description'])
-weathertemp = f"{weather['main']['temp']} Celsius"
+weathertemp = f"{weather['main']['temp']} Celsius" 
 
 
 
@@ -81,7 +81,7 @@ def connect():
         cur = con.cursor()
         #insert(cur)
         #deleteperson(6, cur)
-        insert(cur)
+        insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp, cur)
         con.commit()
 
         # print('PostgreSQL database version:')
@@ -98,10 +98,10 @@ def connect():
             con.close()
             print('Database connection closed.')
 
-def insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp cur):
-    SQL = "INSERT INTO person (name, startdate, starttime, enddate, endtime, project, description,\
-        weatherdescription, weathertemp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
-    data = (f"{name}", f"{startdate}", f"{starttime}", f"{enddate}", f"{endtime}", f"{project}",\
-        f"{desc}", f"{weatherdesc}", f"{weathertemp}")
-        
-    cur.execute(SQL, data)
+def insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp, cur):
+    SQL = "INSERT INTO public.saakuraprojekti (id, name, startdate, starttime, enddate, endtime, project, description,\
+    weatherdescription, weathertemp) VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+    cur.execute(SQL, (name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp,))
+
+connect()
+
