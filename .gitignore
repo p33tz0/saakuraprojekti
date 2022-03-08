@@ -1,4 +1,4 @@
-src/data/database.ini
+database.ini
 .venv/
 .idea/
 *.pyc
