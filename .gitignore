@@ -3,6 +3,11 @@ database.ini
 .idea/
 *.pyc
 
+#mikko
+database.ini
+send_mail.py
+notes_mikko.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
