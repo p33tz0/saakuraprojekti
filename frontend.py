@@ -3,7 +3,68 @@ import datetime
 from config import config
 import requests
 
-#Here we connect to the table in PostgreSQL server 
+#This asks for some parameters from user which is used for database.
+name = str(input("Anna nimesi: "))
+
+#This asks for year, month and day for the starting date
+def startdate():
+    startdateyear = int(input("Aloitusaika: Anna vuosi: "))
+    startdatemonth = int(input("Aloitusaika: Anna kuukauden numero: "))
+    startdateday = int(input("Aloitusaika: Anna päivän numero: "))
+    #This combines the former to a proper date
+    startdate = datetime.date(startdateyear, startdatemonth, startdateday)
+    return startdate
+
+
+#This asks user for end and start date in YYYY-MM-DD
+while True:
+    try:
+        start = datetime.datetime.strptime(input('Anna aloituspäivä YYYY-MM-DD formaatissa: '), '%Y-%m-%d')
+        startdate = start.strftime('%Y-%m-%d')
+        end = datetime.datetime.strptime(input("Anna lopetuspäivä YYYY-MM-DD formaatissa: "), '%Y-%m-%d')
+        enddate = end.strftime('%Y-%m-%d')
+        if enddate < startdate:
+            print("Lopetusika on aikaisempi kuin aloitusaika")
+            continue
+        break
+    
+    except:
+        print("Anna oikeassa formaatissa / ")
+
+#This takes the starting time in HHMM format, eg. 0820
+while True:
+    try: 
+        a = datetime.datetime.strptime(input('Anna aloitusaika HHMM formaatissa: '), "%H%M")
+        starttime = a.strftime("%H:%M")
+        print(starttime)
+        break
+    except:
+        print("Anna oikea aika HHMM formaatissa")
+
+
+#This takes the ending time in HHMM format, eg. 0820
+
+while True:
+    try: 
+        a = datetime.datetime.strptime(input('Anna lopetusaika HHMM formaatissa: '), "%H%M")
+        endtime = a.strftime("%H:%M")
+        break
+    except:
+        print("Anna oikea aika HHMM formaatissa")
+
+project = str(input("Anna projektin nimI: ")
+description = str(input("Anna projektin selitys: "))
+
+#Here we get the weather description and temperature from openweathermap
+req = requests.get("http://api.openweathermap.org/data/2.5/weather?lat=60.1695&lon=24.9355&appid=6efc1791652387ffbf2eaf2934333384&lang=fi&units=metric")
+weather = req.json()
+for i in weather["weather"]:
+    weatherdesc = (i['description'])
+weathertemp = f"{weather['main']['temp']} Celsius"
+
+
+
+
 
 def connect():
     """ Connect to the PostgreSQL database server """
@@ -15,19 +76,20 @@ def connect():
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
         con = psycopg2.connect(**params)
-        
+		
         # create a cursor
         cur = con.cursor()
-        
-    # execute a statement
-        print('PostgreSQL database version:')
-        cur.execute('SELECT version()')
+        #insert(cur)
+        #deleteperson(6, cur)
+        insert(cur)
+        con.commit()
 
-        # display the PostgreSQL database server version
-        db_version = cur.fetchone()
-        print(db_version)
-       
-    # close the communication with the PostgreSQL
+        # print('PostgreSQL database version:')
+        # cur.execute('SELECT version()')
+
+        # db_version = cur.fetchone()
+        # print(db_version)
+
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -36,38 +98,6 @@ def connect():
             con.close()
             print('Database connection closed.')
 
-
-#This asks for some parameters from user which is used for database.
-name = str(input("Anna nimesi: "))
-def startdate():
-    #This asks for year, month and day for the starting date
-    startdateyear = int(input("Aloitusaika: Anna vuosi: "))
-    startdatemonth = int(input("Aloitusaika: Anna kuukauden numero: "))
-    startdateday = int(input("Aloitusaika: Anna päivän numero: "))
-    #This combines the former to a proper date
-    startdate = datetime.date(startdateyear, startdatemonth, startdateday)
-    return startdate
-
-#This takes the starting time in HHMM format, eg. 0820
-try: 
-    a = datetime.datetime.strptime(raw_input('Anna aloitusaika HHMM formaatissa: '), "%H%M")
-    starttime = a.strftime("%H%M")
-except:
-    print("Anna oikea aika HHMM formaatissa")
-
-def enddate():
-    enddateyear = int(input("Lopetusaika: Anna vuosi:  "))
-    enddatemonth = int(input("Lopetusaika: Anna kuukauden numero: "))
-    enddateday = int(input("Lopetusika: Anna päivän numeero: "))
-    enddate = datetime.date(enddateyear, enddatemonth, enddateday)
-    return enddate
-
-project = str(input("Anna projektin nimI: ")
-description = str(input("Anna projektin selitys: "))
-
-#Here we get the weather description and temperature from openweathermap
-req = requests.get("http://api.openweathermap.org/data/2.5/weather?lat=60.1695&lon=24.9355&appid=6efc1791652387ffbf2eaf2934333384&lang=fi&units=metric")
-weather = req.json()
-for i in weather["weather"]:
-    weatherdesc = (i['description'])
-weathertemp = f"{weather['main']['temp']} Celsius"
+def insert(cur):
+    SQL = "INSERT INTO person (name, age) VALUES ('Pasi', 22);"
+    cur.execute(SQL)
