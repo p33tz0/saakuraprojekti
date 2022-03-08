@@ -53,7 +53,7 @@ while True:
         print("Anna oikea aika HHMM formaatissa")
 
 project = str(input("Anna projektin nimI: ")
-description = str(input("Anna projektin selitys: "))
+desc = str(input("Anna projektin selitys: "))
 
 #Here we get the weather description and temperature from openweathermap
 req = requests.get("http://api.openweathermap.org/data/2.5/weather?lat=60.1695&lon=24.9355&appid=6efc1791652387ffbf2eaf2934333384&lang=fi&units=metric")
@@ -98,6 +98,10 @@ def connect():
             con.close()
             print('Database connection closed.')
 
-def insert(cur):
-    SQL = "INSERT INTO person (name, age) VALUES ('Pasi', 22);"
-    cur.execute(SQL)
+def insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp cur):
+    SQL = "INSERT INTO person (name, startdate, starttime, enddate, endtime, project, description,\
+        weatherdescription, weathertemp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+    data = (f"{name}", f"{startdate}", f"{starttime}", f"{enddate}", f"{endtime}", f"{project}",\
+        f"{desc}", f"{weatherdesc}", f"{weathertemp}")
+        
+    cur.execute(SQL, data)
