@@ -7,32 +7,12 @@ from weather import req
 #This asks for some parameters from user which is used for database.
 name = str(input("Anna nimesi: "))
 
-#This asks for year, month and day for the starting date
-def startdate():
-    startdateyear = int(input("Aloitusaika: Anna vuosi: "))
-    startdatemonth = int(input("Aloitusaika: Anna kuukauden numero: "))
-    startdateday = int(input("Aloitusaika: Anna päivän numero: "))
-    #This combines the former to a proper date
-    startdate = datetime.date(startdateyear, startdatemonth, startdateday)
-    return startdate
-
-#This takes the starting time in HHMM format, eg. 0820
-while True:
-    try: 
-        a = datetime.datetime.strptime(input('Anna aloitusaika HHMM formaatissa: '), "%H%M")
-        starttime = a.strftime("%H:%M")
-        break
-    except:
-        print("Anna oikea aika HHMM formaatissa")
-
 #This asks user for end and start date in YYYY-MM-DD
 while True:
     try:
         start = datetime.datetime.strptime(input('Anna aloituspäivä YYYY-MM-DD formaatissa: '), '%Y-%m-%d')
-        startdate = start.strftime('%Y-%m-%d')
         end = datetime.datetime.strptime(input("Anna lopetuspäivä YYYY-MM-DD formaatissa: "), '%Y-%m-%d')
-        enddate = end.strftime('%Y-%m-%d')
-        if enddate < startdate:
+        if end < start:
             print("Lopetusaika on aikaisempi kuin aloitusaika")
             continue
         break
@@ -40,16 +20,30 @@ while True:
         print("Anna oikeassa formaatissa / ")
 
 
-#This takes the ending time in HHMM format, eg. 0820
+#This takes the starting time in HHMM format, eg. 0820
 while True:
     try: 
-        a = datetime.datetime.strptime(input('Anna lopetusaika HHMM formaatissa: '), "%H%M")
-        endtime = a.strftime("%H:%M")
+        a = datetime.datetime.strptime(input('Anna aloitusaika HHMM formaatissa: '), "%H%M").time()
+        starttime = a.strftime("%H:%M")
         break
     except:
         print("Anna oikea aika HHMM formaatissa")
 
-#
+#This takes the ending time in HHMM format, eg. 0820
+while True:
+    try: 
+        x = datetime.datetime.strptime(input('Anna lopetusaika HHMM formaatissa: '), "%H%M").time()
+        endtime = x.strftime("%H:%M")
+        break
+    except:
+        print("Anna oikea aika HHMM formaatissa")
+
+#this combines the end datetime and x datetime.time to a datetime object 
+enddatetime = datetime.datetime.combine(end, x)
+#this combines the start datetime and a datetime.time to a datetime object      
+startdatetime = datetime.datetime.combine(start, a)
+
+
 project = str(input("Anna projektin nimi: "))
 desc = str(input("Anna projektin selitys: "))
 
@@ -79,7 +73,7 @@ def connect():
         cur = con.cursor()
         #insert(cur)
         #deleteperson(6, cur)
-        insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdescription, weathertemp, cur)
+        insert(name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp, cur)
         con.commit()
 
         # print('PostgreSQL database version:')
@@ -96,10 +90,11 @@ def connect():
             con.close()
             print('Database connection closed.')
 
-def insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp, cur):
-    SQL = "INSERT INTO public.saakuraprojekti (id, name, startdate, starttime, enddate, endtime, project, description,\
-    weatherdescription, weathertemp) VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-    cur.execute(SQL, (name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp,))
+#SQL table insert
+def insert(name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp, cur):
+    SQL = "INSERT INTO public.saakuraprojekti (id, name, startdate, enddate, project, description,\
+    weatherdescription, weathertemp) VALUES (3, %s, %s, %s, %s, %s, %s, %s);"
+    cur.execute(SQL, (name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp,))
 
 connect()
 
