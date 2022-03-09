@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import yagmail
 import psycopg2
 from config import config
@@ -11,9 +13,9 @@ def send_mail():
         params = config()
         con = psycopg2.connect(**params)
         cur = con.cursor()
-        SQL = 'SELECT name, startdate, enddate, starttime, endtime, weathertemp, weatherdescription FROM public.saakuraprojekti'
+        SQL = 'SELECT name, startdate, enddate, project, description, weatherdescription, weathertemp, totalhours FROM public.saakuraprojekti'
         cur.execute(SQL)
-        row = cur.fetchone()
+        row = cur.fetchall()
         con.commit()
         cur.close()
 
@@ -22,22 +24,17 @@ def send_mail():
     finally:
         if con is not None:
             con.close()
-    
-    joined_string = " ".join(row)
-    
-    content = joined_string
-    print(joined_string)
+
 
 
     yag = yagmail.SMTP('userlogin', 'userpassword')
-    
+    subject = "DAILY REPORT"
     contents = [
-    joined_string
+    row
     ]
-    yag.send('a@a.com', 'Daily report', contents)
+    
+    yag.send('a@a.com', subject, contents)
     print("mail sent!")
     
 
 send_mail()
-
-#name, startdate, starttime, enddate, endtime, project, desc, weatherdescription, weathertemp,
