@@ -14,11 +14,11 @@ def send_mail():
         params = config()
         con = psycopg2.connect(**params)
         cur = con.cursor()
-        #lasku = "UPDATE saakurataulu SET totalminutes=(DATE_PART('day', enddate::timestamp - startdate::timestamp) * 24 + DATE_PART('hour', enddate::timestamp - startdate::timestamp)) * 60 + DATE_PART('minute', enddate::timestamp - startdate::timestamp);"
-        #lasku2 = "UPDATE saakurataulu SET hoursdecimal = totalminutes / 60;"
-        SQL = 'SELECT name as Nimi, startdate, enddate, project, description, weatherdescription, weathertemp FROM public.saakurataulu'
-        #cur.execute(lasku)
-        #cur.execute(lasku2)
+        lasku = "UPDATE saakurataulu SET totalminutes=(DATE_PART('day', enddate::timestamp - startdate::timestamp) * 24 + DATE_PART('hour', enddate::timestamp - startdate::timestamp)) * 60 + DATE_PART('minute', enddate::timestamp - startdate::timestamp);"
+        lasku2 = "UPDATE saakurataulu SET hoursdecimal = totalminutes / 60;"
+        SQL = 'SELECT name as Nimi, startdate, enddate, project, description, weatherdescription, weathertemp, ROUND (hoursdecimal, 2) FROM public.saakurataulu'
+        cur.execute(lasku)
+        cur.execute(lasku2)
         cur.execute(SQL)
         con.commit()
         colnames = [desc[0] for desc in cur.description]
@@ -40,8 +40,12 @@ def send_mail():
                 indexi += 1
             lista.append(listasis)
             row = cur.fetchone()
-        headerit = ["Nimi","Aloitusaika", "Lopetusaika", "Projekti", "Projektikuvaus", "Sää", "Lämpötila"]
-        print(tabulate(lista, headers=headerit, tablefmt="pretty"))
+        headerit = ["Name","Start time", "Stop time", "Project", "Project description", "Weather", "Temperature", "Hours"]
+            
+        
+        testi = tabulate(lista, headers=headerit, tablefmt="pretty")
+        with open ("tunnit.txt", "w") as tunnit:
+            tunnit.write(testi)
         con.commit()
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:

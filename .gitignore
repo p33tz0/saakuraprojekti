@@ -4,6 +4,7 @@ database.ini
 *.pyc
 weather.py
 
+
 #mikko
 database.ini
 send_mail.py
