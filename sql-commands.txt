@@ -14,7 +14,7 @@ weatherdescription varchar(100) NOT NULL,
 weathertemp varchar(100) NOT NULL
 )
 
-# Add new column
+# Add new column to table
 ALTER TABLE saakurataulu
 ADD totalminutes decimal;
 
