@@ -16,6 +16,14 @@ def startdate():
     startdate = datetime.date(startdateyear, startdatemonth, startdateday)
     return startdate
 
+#This takes the starting time in HHMM format, eg. 0820
+while True:
+    try: 
+        a = datetime.datetime.strptime(input('Anna aloitusaika HHMM formaatissa: '), "%H%M")
+        starttime = a.strftime("%H:%M")
+        break
+    except:
+        print("Anna oikea aika HHMM formaatissa")
 
 #This asks user for end and start date in YYYY-MM-DD
 while True:
@@ -30,16 +38,6 @@ while True:
         break
     except:
         print("Anna oikeassa formaatissa / ")
-
-#This takes the starting time in HHMM format, eg. 0820
-while True:
-    try: 
-        a = datetime.datetime.strptime(input('Anna aloitusaika HHMM formaatissa: '), "%H%M")
-        starttime = a.strftime("%H:%M")
-        break
-    except:
-        print("Anna oikea aika HHMM formaatissa")
-
 
 #This takes the ending time in HHMM format, eg. 0820
 while True:
@@ -80,7 +78,7 @@ def connect():
         cur = con.cursor()
         #insert(cur)
         #deleteperson(6, cur)
-        insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp, cur)
+        insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdescription, weathertemp, cur)
         con.commit()
 
         # print('PostgreSQL database version:')
