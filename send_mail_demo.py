@@ -32,13 +32,3 @@ def send_mail():
     
     yag.send('a@a.com', subject, contents)
     print("mail sent!")
-    
-
-send_mail()
-    
-    joined_string = " ".join(row)
-    content = joined_string
-    subject = "Daily report"
-    print(joined_string)
-
-    server.sendmail("a@a.com", "a@a.com", f"Subject: {subject}\n{content}")
