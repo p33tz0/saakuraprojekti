@@ -36,7 +36,6 @@ while True:
     try: 
         a = datetime.datetime.strptime(input('Anna aloitusaika HHMM formaatissa: '), "%H%M")
         starttime = a.strftime("%H:%M")
-        print(starttime)
         break
     except:
         print("Anna oikea aika HHMM formaatissa")
@@ -52,7 +51,7 @@ while True:
         print("Anna oikea aika HHMM formaatissa")
 
 #
-project = str(input("Anna projektin nimI: "))
+project = str(input("Anna projektin nimi: "))
 desc = str(input("Anna projektin selitys: "))
 
 #Here we get the weather description and temperature from openweathermap
@@ -81,7 +80,7 @@ def connect():
         cur = con.cursor()
         #insert(cur)
         #deleteperson(6, cur)
-        insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp, cur)
+        insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdescription, weathertemp, cur)
         con.commit()
 
         # print('PostgreSQL database version:')
