@@ -13,9 +13,22 @@ def send_mail():
         params = config()
         con = psycopg2.connect(**params)
         cur = con.cursor()
-        SQL = 'SELECT name, startdate, enddate, project, description, weatherdescription, weathertemp, totalhours FROM public.saakuraprojekti'
+        lasku = "UPDATE saakurataulu SET totalminutes=(DATE_PART('day', enddate::timestamp - startdate::timestamp) * 24 + DATE_PART('hour', enddate::timestamp - startdate::timestamp)) * 60 + DATE_PART('minute', enddate::timestamp - startdate::timestamp);"
+        SQL = 'SELECT name, startdate, enddate, project, description, weatherdescription, weathertemp, totalminutes FROM public.saakurataulu'
+        cur.execute(lasku)
         cur.execute(SQL)
-        row = cur.fetchall()
+        con.commit()
+        colnames = [desc[0] for desc in cur.description]
+        print(colnames)
+        row = cur.fetchone()
+        while row is not None:
+            indexi = 0
+            for i in row:
+                print(f"{i}  {colnames[indexi]}")
+                indexi += 1
+            row = cur.fetchone()
+
+        
         con.commit()
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -24,12 +37,13 @@ def send_mail():
         if con is not None:
             con.close()
 
-    yag = yagmail.SMTP('userlogin', 'userpassword')
-    subject = "DAILY REPORT"
-    contents = [
-    row
-    ]
+    #yag = yagmail.SMTP('userlogin', 'userpassword')
+    #subject = "DAILY REPORT"
+    #contents = [
+    #row
+    #]
     
-    yag.send('a@a.com', subject, contents)
-    print("mail sent!")
+    #yag.send('a@a.com', subject, contents)
+   # print("mail sent!")
 send_mail()
+
