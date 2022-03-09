@@ -1,31 +1,41 @@
-import smtplib
+#!/usr/bin/python3
+
+import yagmail
 import psycopg2
 from config import config
 import requests
 
 def send_mail():
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.ehlo()
-    server.login("userlogin", "userpassword")
+
     con = psycopg2.connect(**config())
 
     try:
         params = config()
         con = psycopg2.connect(**params)
         cur = con.cursor()
-        SQL = 'SELECT name, startdate FROM public.saakuraprojekti'
+        SQL = 'SELECT name, startdate, enddate, project, description, weatherdescription, weathertemp, totalhours FROM public.saakuraprojekti'
         cur.execute(SQL)
-        row = cur.fetchone()
+        row = cur.fetchall()
         con.commit()
         cur.close()
-
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
         if con is not None:
             con.close()
+
+    yag = yagmail.SMTP('userlogin', 'userpassword')
+    subject = "DAILY REPORT"
+    contents = [
+    row
+    ]
+    
+    yag.send('a@a.com', subject, contents)
+    print("mail sent!")
+    
+
+send_mail()
+=======
     
     joined_string = " ".join(row)
     content = joined_string
