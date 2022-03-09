@@ -35,7 +35,6 @@ def send_mail():
     
 
 send_mail()
-=======
     
     joined_string = " ".join(row)
     content = joined_string
