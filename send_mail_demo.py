@@ -32,3 +32,4 @@ def send_mail():
     
     yag.send('a@a.com', subject, contents)
     print("mail sent!")
+send_mail()
