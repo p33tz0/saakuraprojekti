@@ -12,8 +12,7 @@ while True:
     try:
         start = datetime.datetime.strptime(input('Anna aloituspäivä YYYY-MM-DD formaatissa: '), '%Y-%m-%d')
         end = datetime.datetime.strptime(input("Anna lopetuspäivä YYYY-MM-DD formaatissa: "), '%Y-%m-%d')
-        enddate = end.strftime('%Y-%m-%d')
-        if enddate < startdate:
+        if end < start:
             print("Lopetusaika on aikaisempi kuin aloitusaika")
             continue
         break
@@ -74,7 +73,7 @@ def connect():
         cur = con.cursor()
         #insert(cur)
         #deleteperson(6, cur)
-        insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdescription, weathertemp, cur)
+        insert(name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp, cur)
         con.commit()
 
         # print('PostgreSQL database version:')
@@ -93,8 +92,8 @@ def connect():
 
 #SQL table insert
 def insert(name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp, cur):
-    SQL = "INSERT INTO public.saakuraprojekti (id, name, startdate, starttime, enddate, endtime, project, description,\
-    weatherdescription, weathertemp) VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+    SQL = "INSERT INTO public.saakuraprojekti (id, name, startdate, enddate, project, description,\
+    weatherdescription, weathertemp) VALUES (3, %s, %s, %s, %s, %s, %s, %s);"
     cur.execute(SQL, (name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp,))
 
 connect()
