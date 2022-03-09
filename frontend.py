@@ -92,9 +92,8 @@ def connect():
 
 #SQL table insert
 def insert(name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp, cur):
-    SQL = "INSERT INTO public.saakuraprojekti (id, name, startdate, enddate, project, description,\
-    weatherdescription, weathertemp) VALUES (3, %s, %s, %s, %s, %s, %s, %s);"
+    SQL = "INSERT INTO public.saakuraprojekti (name, startdate, enddate, project, description,\
+    weatherdescription, weathertemp) VALUES (%s, %s, %s, %s, %s, %s, %s);"
     cur.execute(SQL, (name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp,))
 
 connect()
-
