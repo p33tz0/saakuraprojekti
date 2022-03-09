@@ -2,6 +2,7 @@ import psycopg2
 import datetime
 from config import config
 import requests
+from weather import req
 
 #This asks for some parameters from user which is used for database.
 name = str(input("Anna nimesi: "))
@@ -24,10 +25,9 @@ while True:
         end = datetime.datetime.strptime(input("Anna lopetuspäivä YYYY-MM-DD formaatissa: "), '%Y-%m-%d')
         enddate = end.strftime('%Y-%m-%d')
         if enddate < startdate:
-            print("Lopetusika on aikaisempi kuin aloitusaika")
+            print("Lopetusaika on aikaisempi kuin aloitusaika")
             continue
         break
-    
     except:
         print("Anna oikeassa formaatissa / ")
 
@@ -43,7 +43,6 @@ while True:
 
 
 #This takes the ending time in HHMM format, eg. 0820
-
 while True:
     try: 
         a = datetime.datetime.strptime(input('Anna lopetusaika HHMM formaatissa: '), "%H%M")
@@ -52,15 +51,16 @@ while True:
     except:
         print("Anna oikea aika HHMM formaatissa")
 
-project = str(input("Anna projektin nimI: ")
-description = str(input("Anna projektin selitys: "))
+#
+project = str(input("Anna projektin nimI: "))
+desc = str(input("Anna projektin selitys: "))
 
 #Here we get the weather description and temperature from openweathermap
-req = requests.get("http://api.openweathermap.org/data/2.5/weather?lat=60.1695&lon=24.9355&appid=6efc1791652387ffbf2eaf2934333384&lang=fi&units=metric")
+
 weather = req.json()
 for i in weather["weather"]:
     weatherdesc = (i['description'])
-weathertemp = f"{weather['main']['temp']} Celsius"
+weathertemp = f"{weather['main']['temp']} Celsius" 
 
 
 
@@ -81,7 +81,7 @@ def connect():
         cur = con.cursor()
         #insert(cur)
         #deleteperson(6, cur)
-        insert(cur)
+        insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp, cur)
         con.commit()
 
         # print('PostgreSQL database version:')
@@ -98,6 +98,10 @@ def connect():
             con.close()
             print('Database connection closed.')
 
-def insert(cur):
-    SQL = "INSERT INTO person (name, age) VALUES ('Pasi', 22);"
-    cur.execute(SQL)
+def insert(name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp, cur):
+    SQL = "INSERT INTO public.saakuraprojekti (id, name, startdate, starttime, enddate, endtime, project, description,\
+    weatherdescription, weathertemp) VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+    cur.execute(SQL, (name, startdate, starttime, enddate, endtime, project, desc, weatherdesc, weathertemp,))
+
+connect()
+
