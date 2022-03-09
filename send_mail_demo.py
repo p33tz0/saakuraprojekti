@@ -18,14 +18,11 @@ def send_mail():
         row = cur.fetchall()
         con.commit()
         cur.close()
-
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
         if con is not None:
             con.close()
-
-
 
     yag = yagmail.SMTP('userlogin', 'userpassword')
     subject = "DAILY REPORT"
@@ -38,3 +35,11 @@ def send_mail():
     
 
 send_mail()
+=======
+    
+    joined_string = " ".join(row)
+    content = joined_string
+    subject = "Daily report"
+    print(joined_string)
+
+    server.sendmail("a@a.com", "a@a.com", f"Subject: {subject}\n{content}")
