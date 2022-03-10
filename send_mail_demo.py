@@ -24,7 +24,7 @@ def send_mail():
         cur2.execute(yhteensa)
         cur.execute(SQL)
         con.commit()
-        #Fetch single row for appending fsdaffas
+        #Fetch single row for appending
         row = cur.fetchone()
         row2 = cur2.fetchone()
         lista = []
