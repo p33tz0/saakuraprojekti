@@ -108,7 +108,8 @@ def insert(name, startdatetime, enddatetime, project, desc, weatherdesc, weather
 #Here we ask if the user wants to send the information to the database or not
 while True:
     sendques = str(input("Haluatko lähettää tiedot? Y/N "))
-    if sendques.lower() == y:
+    if sendques.lower() == "y":
         connect()
+        break
     else:
         break
