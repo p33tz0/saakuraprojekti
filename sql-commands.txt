@@ -1,0 +1,35 @@
+# Create new table
+
+CREATE TABLE saakuraprojekti
+(
+id int PRIMARY KEY,
+name varchar(100) NOT NULL,
+startdate varchar(100) NOT NULL,
+starttime varchar(100) NOT NULL,
+enddate varchar(100) NOT NULL,
+endtime varchar(100) NOT NULL,
+project varchar(100) NOT NULL,
+description varchar(100) NOT NULL,
+weatherdescription varchar(100) NOT NULL,
+weathertemp varchar(100) NOT NULL
+)
+
+# Add new column to table
+ALTER TABLE saakurataulu
+ADD totalminutes decimal;
+
+# Empty entire table
+TRUNCATE TABLE  saakurataulu;
+
+# Drop columns
+ALTER TABLE saakurataulu
+DROP COLUMN totalminutes;
+
+# Update column values with working hours calculated
+UPDATE saakurataulu SET totalhours=(DATE_PART('day', enddate::timestamp - startdate::timestamp) * 24 + 
+               DATE_PART('hour', enddate::timestamp - startdate::timestamp)) * 60 +
+               DATE_PART('minute', enddate::timestamp - startdate::timestamp);
+
+# Rename column
+ALTER TABLE saakurataulu 
+RENAME COLUMN totalhours TO totalminutes;
