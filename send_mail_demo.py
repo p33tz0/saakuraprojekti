@@ -58,6 +58,5 @@ def send_mail():
     yag = yagmail.SMTP('userlogin', 'userpassword!')
     contents = [lista]
     yag.send(to='a@a.com', subject='Sending daily report', contents=f'Dear Mr.Boss,\n \n report in attachment. \n \n Total hours: {totalhour}', attachments=['tunnit.txt'])
-    print("mail sent!")
-    
+    print("mail sent!")    
 send_mail()
