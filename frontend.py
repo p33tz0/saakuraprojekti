@@ -1,8 +1,8 @@
 import psycopg2
 import datetime
 from config import config
-import requests
 from weather import req
+from tabulate import tabulate
 
 #This asks for some parameters from user which is used for database.
 name = str(input("Anna nimesi: "))
@@ -54,10 +54,17 @@ for i in weather["weather"]:
     weatherdesc = (i['description'])
 weathertemp = f"{weather['main']['temp']} Celsius" 
 
+#Here we create list inside a list for tabulating
+paramlist = []
+listinner = [name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp]
+paramlist.append(listinner)
+headerit = ["Name","Start time", "Stop time", "Project", "Project description", "Weather", "Temperature"]
+testi = tabulate(paramlist, headers=headerit, tablefmt="pretty")
+print(testi)
 
 
 
-
+#This is the connection to the database
 def connect():
     """ Connect to the PostgreSQL database server """
     con = psycopg2.connect(**config())
@@ -90,10 +97,18 @@ def connect():
             con.close()
             print('Database connection closed.')
 
+
+
 #SQL table insert
 def insert(name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp, cur):
     SQL = "INSERT INTO public.saakurataulu (name, startdate, enddate, project, description,\
     weatherdescription, weathertemp) VALUES (%s, %s, %s, %s, %s, %s, %s);"
     cur.execute(SQL, (name, startdatetime, enddatetime, project, desc, weatherdesc, weathertemp,))
 
-connect()
+#Here we ask if the user wants to send the information to the database or not
+while True:
+    sendques = str(input("Haluatko lähettää tiedot? Y/N "))
+    if sendques.lower() == y:
+        connect()
+    else:
+        break
