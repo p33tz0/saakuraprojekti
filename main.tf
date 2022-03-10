@@ -32,10 +32,6 @@ resource "azurerm_postgresql_server" "psql" {
   administrator_login_password = var.administrator_login_password
   version                      = "9.5"
   ssl_enforcement_enabled      = true
-     
-     lifecycle {
-    prevent_destroy = true
-  }
 }
 # postgresql database create
 resource "azurerm_postgresql_database" "db" {
@@ -44,9 +40,6 @@ resource "azurerm_postgresql_database" "db" {
   server_name         = azurerm_postgresql_server.psql.name
   charset             = "UTF8"
   collation           = "English_United States.1252"
-     lifecycle {
-    prevent_destroy = true
-  }
 }
 # Create vnet
 resource "azurerm_virtual_network" "example" {
@@ -151,7 +144,7 @@ resource "azurerm_availability_set" "example" {
 }
 # Get a Static Public IP
 resource "azurerm_public_ip" "example" {
-  name = "linux-xxxxx-vm-ip"
+  name = "linux-loadbalancerzzz-vm-ip"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
   allocation_method   = "Static"
@@ -188,8 +181,8 @@ resource "azurerm_linux_virtual_machine" "web-linux-vm" {
    storage_account_type = "Standard_LRS"
   }
   computer_name  = "hostname"
-  admin_username = "testadmin"
-  admin_password = "Password1234!"
+  admin_username = "xxxx"
+  admin_password = "xxxx"
   disable_password_authentication = false
   custom_data    = base64encode(data.template_file.linux-vm-cloud-init.rendered)
 }
