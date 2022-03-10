@@ -28,6 +28,7 @@ def send_mail():
         row = cur.fetchone()
         row2 = cur2.fetchone()
         lista = []
+        
         #Appending entries from DB to a list inside a list for tabulating later
         while row is not None:
             indexi = 0
@@ -38,10 +39,11 @@ def send_mail():
                 indexi += 1
             lista.append(listasis)
             row = cur.fetchone()
+        
         headerit = ["Name","Start time", "Stop time", "Project", "Project description", "Weather", "Temperature", "Hours"]
-            
         #Tabulate results from DB queries to a pretty table
         printti = tabulate(lista, headers=headerit, tablefmt="pretty")
+        
         #Write results from tabulate to a text file 
         with open ("tunnit.txt", "w") as tunnit:
             tunnit.write(printti)
